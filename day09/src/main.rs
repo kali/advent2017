@@ -6,13 +6,10 @@ fn main() -> anyhow::Result<()> {
     let mut garbageing = false;
     let mut garbage = 0;
     for c in input.chars() {
-        if cancelling {
-            cancelling = false;
-            continue;
-        }
         match c {
-            '!' => { cancelling = true },
-            '>' => { garbageing = false },
+            _ if cancelling => cancelling = false,
+            '!' => cancelling = true,
+            '>' => garbageing = false,
             '{' if !garbageing => {
                 depth += 1;
                 score += depth;
@@ -23,8 +20,8 @@ fn main() -> anyhow::Result<()> {
             _ if garbageing => {
                 garbage += 1;
             }
-            '<' => { garbageing = true },
-            _ => ()
+            '<' => garbageing = true,
+            _ => (),
         }
     }
     dbg!(score);
